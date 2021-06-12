@@ -1,0 +1,87 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "flutter",
+			"command": "flutter",
+			"args": [
+				"build",
+				"apk",
+				"--target-platform",
+				"android-arm,android-arm64",
+				"--split-per-abi",
+				"--no-sound-null-safety"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"label": "flutter: flutter build apk"
+		},
+		{
+			"type": "flutter",
+			"command": "flutter",
+			"args": [
+				"build",
+				"apk",
+				"--no-sound-null-safety"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"label": "flutter: flutter build apk"
+		},
+		{
+			"type": "flutter",
+			"command": "flutter",
+			"args": [
+				"build",
+				"web",
+				"--no-sound-null-safety",
+				"--dart-define=FLUTTER_WEB_CANVASKIT_URL=https://unpkg.zhimg.com/canvaskit-wasm@0.24.0/bin/"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"label": "flutter: flutter build web1"
+		},
+		{
+			"type": "flutter",
+			"command": "flutter",
+			"args": [
+				"build",
+				"web",
+				"--no-sound-null-safety",
+				"--dart-define=FLUTTER_WEB_CANVASKIT_URL=https://unpkg.zhimg.com/canvaskit-wasm@0.24.0/bin/"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"label": "flutter: flutter build web2"
+		},
+		{
+			"type": "flutter",
+			"command": "flutter",
+			"args": [
+				"build",
+				"web",
+				"--web-renderer=auto",
+				"--no-sound-null-safety",
+				"--dart-define=FLUTTER_WEB_CANVASKIT_URL=https://unpkg.zhimg.com/canvaskit-wasm@0.24.0/bin/"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"label": "flutter: flutter build web3"
+		},
+		{
+			"type": "flutter",
+			"command": "flutter",
+			"args": [
+				"build",
+				"web",
+				"--web-renderer=auto"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"label": "flutter: flutter build web"
+		}
+	]
+}

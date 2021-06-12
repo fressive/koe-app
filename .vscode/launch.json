@@ -4,8 +4,16 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
+        
+        
+    
         {
             "name": "koe_flutter",
+            "args": [
+                "--no-sound-null-safety",
+                "--dart-define=FLUTTER_WEB_CANVASKIT_URL=\"https://unpkg.zhimg.com/canvaskit-wasm@0.24.0/bin\""
+            ],
             "request": "launch",
             "type": "dart"
         }

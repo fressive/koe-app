@@ -6,9 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'local_music.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({
-    Key key,
-  });
+  const HomeView({Key? key});
 
   @override
   _HomeViewState createState() => new _HomeViewState();
@@ -20,7 +18,12 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       appBar: AppBar(
         title: Text("主页"),
-        actions: [IconButton(icon: Icon(Icons.search))],
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {},
+          )
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -45,6 +48,9 @@ class _HomeViewState extends State<HomeView> {
             ListTile(
               leading: Icon(Icons.upload_file),
               title: Text('上传'),
+              onTap: () {
+                Navigator.pushNamed(context, "/song_upload");
+              },
             ),
             ListTile(
               leading: Icon(Icons.settings),
@@ -71,11 +77,12 @@ class _HomeViewState extends State<HomeView> {
                       childAspectRatio: 0.007.sw),
                   children: [
                     Card(
+                        elevation: 2,
                         shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0))),
                         clipBehavior: Clip.antiAlias,
-                        child: FlatButton(
+                        child: TextButton(
                             child: Row(
                               children: [
                                 Icon(Icons.music_note_outlined),
@@ -94,11 +101,12 @@ class _HomeViewState extends State<HomeView> {
                               Navigator.pushNamed(context, '/local_music');
                             })),
                     Card(
+                      elevation: 2,
                       shape: RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.all(Radius.circular(10.0))),
                       clipBehavior: Clip.antiAlias,
-                      child: FlatButton(
+                      child: TextButton(
                           child: Row(
                             children: [
                               Icon(Icons.cloud_outlined),
@@ -117,11 +125,12 @@ class _HomeViewState extends State<HomeView> {
                           }),
                     ),
                     Card(
+                      elevation: 2,
                       shape: RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.all(Radius.circular(10.0))),
                       clipBehavior: Clip.antiAlias,
-                      child: FlatButton(
+                      child: TextButton(
                           child: Row(
                             children: [
                               Icon(Icons.download_outlined),
@@ -136,15 +145,16 @@ class _HomeViewState extends State<HomeView> {
                             mainAxisAlignment: MainAxisAlignment.center,
                           ),
                           onPressed: () {
-                            Navigator.pushNamed(context, '/local_music');
+                            Navigator.pushNamed(context, '/download_manager');
                           }),
                     ),
                     Card(
+                      elevation: 2,
                       shape: RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.all(Radius.circular(10.0))),
                       clipBehavior: Clip.antiAlias,
-                      child: FlatButton(
+                      child: TextButton(
                           child: Row(
                             children: [
                               Icon(Icons.featured_play_list_outlined),
@@ -173,11 +183,15 @@ class _HomeViewState extends State<HomeView> {
           Padding(
             padding: const EdgeInsets.all(6.0),
             child: Card(
+                elevation: 2,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 child: Column(children: [
                   Row(children: [
-                    IconButton(icon: Icon(Icons.expand_more)),
+                    IconButton(
+                      icon: Icon(Icons.expand_more),
+                      onPressed: () {},
+                    ),
                     Text("创建的歌单", style: Theme.of(context).textTheme.subtitle1),
                     Text("  (1)", style: Theme.of(context).textTheme.caption)
                   ])

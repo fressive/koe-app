@@ -5,7 +5,7 @@ import 'package:koe/common/global.dart';
 import 'package:get/get.dart';
 
 class SettingsView extends StatefulWidget {
-  const SettingsView({Key key}) : super(key: key);
+  const SettingsView({Key? key}) : super(key: key);
 
   @override
   _SettingsViewState createState() => _SettingsViewState();
@@ -60,16 +60,15 @@ class _SettingsViewState extends State<SettingsView> {
   _checkConn(BuildContext context) async {
     var text = "";
     try {
-      var data = await Api.getBackendVersion();
-
-      if (data.message != "OK") throw Exception("API 返回信息错误。");
+      await Api.getBackendVersion();
 
       text = "测试成功";
     } catch (e) {
       text = e.toString();
     }
 
-    Get.snackbar("结果", text, snackPosition: SnackPosition.TOP);
+    Get.rawSnackbar(
+        title: "结果", message: text, snackPosition: SnackPosition.BOTTOM);
   }
 
   @override
@@ -358,31 +357,39 @@ class _SettingsViewState extends State<SettingsView> {
                                 child: Text("其它",
                                     style: Theme.of(context).textTheme.caption),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Row(
-                                  children: [
-                                    Text("关于 Koe",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2)
-                                  ],
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                              InkWell(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Row(
+                                    children: [
+                                      Text("关于 Koe",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2)
+                                    ],
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                  ),
                                 ),
+                                onTap: () =>
+                                    Navigator.pushNamed(context, '/about'),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Row(
-                                  children: [
-                                    Text("开放源代码许可",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2)
-                                  ],
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                              InkWell(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Row(
+                                    children: [
+                                      Text("开放源代码许可",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2)
+                                    ],
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                  ),
                                 ),
+                                onTap: () =>
+                                    Navigator.pushNamed(context, '/osl'),
                               ),
                             ],
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -408,7 +415,7 @@ class _SettingsViewState extends State<SettingsView> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(15.0),
-                                  child: Text("登录和网络",
+                                  child: Text("数据存储",
                                       style:
                                           Theme.of(context).textTheme.caption),
                                 ),
@@ -416,24 +423,11 @@ class _SettingsViewState extends State<SettingsView> {
                                   padding: const EdgeInsets.all(15.0),
                                   child: Row(
                                     children: [
-                                      Text("登录凭据",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle2)
-                                    ],
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Row(
-                                    children: [
-                                      Text("服务器地址",
+                                      Text("数据保存地址",
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle2),
-                                      Text("demo.koe.fressive.cn",
+                                      Text("/mnt/onedrive/koe",
                                           style: Theme.of(context)
                                               .textTheme
                                               .caption)
@@ -515,14 +509,14 @@ class _SettingsViewState extends State<SettingsView> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(15.0),
-                                child: Text("播放和下载",
+                                child: Text("音频",
                                     style: Theme.of(context).textTheme.caption),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(15.0),
                                 child: Row(
                                   children: [
-                                    Text("播放音质",
+                                    Text("保存压缩后的音频文件",
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle2),
@@ -651,7 +645,7 @@ class _SettingsViewState extends State<SettingsView> {
                                 padding: const EdgeInsets.all(15.0),
                                 child: Row(
                                   children: [
-                                    Text("关于 Koe",
+                                    Text("帮助",
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle2)
@@ -664,7 +658,7 @@ class _SettingsViewState extends State<SettingsView> {
                                 padding: const EdgeInsets.all(15.0),
                                 child: Row(
                                   children: [
-                                    Text("开放源代码许可",
+                                    Text("重置所有服务器设置",
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle2)
