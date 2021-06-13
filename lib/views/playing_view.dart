@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:koe/common/api.dart';
 import 'package:koe/common/global.dart';
 import 'package:koe/controller/SongInformationController.dart';
+import 'package:koe/models/model.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class PlayingView extends StatefulWidget {
@@ -23,6 +24,38 @@ class _PlayingViewState extends State<PlayingView>
     with TickerProviderStateMixin {
   final SongInformationController controller = Get.find();
 
+  _PlayingViewState() {
+    Global.audioHandler.mediaItem.listen((value) async {
+      try {
+        if (value == null) return;
+
+        getPaletteFromUrl(controller.artUri.value).then((palette) {
+          color1.value =
+              Color.fromRGBO(palette[0][0], palette[0][1], palette[0][2], .65);
+          color2.value =
+              Color.fromRGBO(palette[1][0], palette[1][1], palette[1][2], .65);
+          color3.value =
+              Color.fromRGBO(palette[2][0], palette[2][1], palette[2][2], .2);
+        });
+
+        var lyrics =
+            await Api.fetchLyric(Song.fromJson(value.extras?["model"]).id!);
+        songLyric.value = lyrics
+                .where((element) => element.language == "source")
+                .first
+                .lyric ??
+            "[00:00.00]暂无歌词";
+        remarkLyric.value = lyrics
+                .where((element) => element.language == "zh_CN")
+                .first
+                .lyric ??
+            "[00:00.00]";
+      } catch (e) {
+        e.printError();
+      }
+    });
+  }
+
   final temp = 0.0.obs;
   final color1 = Color(0xbbf44336).obs;
   final color2 = Color(0xa32196f3).obs;
@@ -35,29 +68,6 @@ class _PlayingViewState extends State<PlayingView>
 
   @override
   Widget build(BuildContext context) {
-    Global.audioHandler.mediaItem.listen((value) async {
-      if (value == null) return;
-
-      compute((_) {
-        getPaletteFromUrl(value.artUri.toString()).then((palette) {
-          color1.value =
-              Color.fromRGBO(palette[0][0], palette[0][1], palette[0][2], .65);
-          color2.value =
-              Color.fromRGBO(palette[1][0], palette[1][1], palette[1][2], .65);
-          color3.value =
-              Color.fromRGBO(palette[2][0], palette[2][1], palette[2][2], .2);
-        });
-      }, "");
-
-      var lyrics = await Api.fetchLyric(controller.model.value!.id!);
-      songLyric.value =
-          lyrics.where((element) => element.language == "source").first.lyric ??
-              "[00:00.00]暂无歌词";
-      remarkLyric.value =
-          lyrics.where((element) => element.language == "zh_CN").first.lyric ??
-              "[00:00.00]";
-    });
-
     final controlBar = Container(
         child: Align(
             alignment: Alignment.centerRight,
@@ -163,7 +173,7 @@ class _PlayingViewState extends State<PlayingView>
                                   child: Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: horizontal ? 20 : 60,
-                                          vertical: horizontal ? 100 : 10),
+                                          vertical: horizontal ? 100 : 0),
                                       child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
@@ -186,9 +196,9 @@ class _PlayingViewState extends State<PlayingView>
                               Expanded(
                                 flex: 6,
                                 child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    padding: EdgeInsets.symmetric(vertical: 20),
                                     child: Obx(() => LyricWidget(
-                                          size: Size(600, 0.6.sh),
+                                          size: Size(600, 750),
                                           vsync: this,
                                           lyricMaxWidth: 0.9.sw,
                                           lyrics: LyricUtil.formatLyric(
@@ -196,7 +206,7 @@ class _PlayingViewState extends State<PlayingView>
                                           remarkLyrics: LyricUtil.formatLyric(
                                               remarkLyric.value),
                                           lyricGap: 5,
-                                          remarkLyricGap: 25,
+                                          remarkLyricGap: 15,
                                           lyricStyle: TextStyle(
                                               fontSize: 10 + 4.sp,
                                               color: Colors.white60),

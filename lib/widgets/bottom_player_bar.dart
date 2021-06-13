@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:koe/common/global.dart';
 import 'package:koe/common/player.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,7 +48,8 @@ class BottomPlayerBarWidget extends StatelessWidget {
                                       color: Theme.of(context).primaryColor,
                                       size: 30,
                                     ),
-                                    onPressed: () => {Player.pause()},
+                                    onPressed: () =>
+                                        {Global.audioHandler.pause()},
                                   )
                                 : IconButton(
                                     icon: Icon(
@@ -55,7 +57,8 @@ class BottomPlayerBarWidget extends StatelessWidget {
                                       color: Theme.of(context).primaryColor,
                                       size: 30,
                                     ),
-                                    onPressed: () => {Player.resume()},
+                                    onPressed: () =>
+                                        {Global.audioHandler.play()},
                                   )),
                         IconButton(
                             onPressed: () async {},

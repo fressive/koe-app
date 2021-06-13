@@ -19,6 +19,7 @@ import 'package:koe/views/local_music.dart';
 import 'package:koe/views/settings.dart';
 
 import 'controller/SongInformationController.dart';
+import 'models/model.dart';
 import 'views/about.dart';
 
 void main() {
@@ -103,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
       c.artist.value = value?.artist ?? "艺术家";
       c.artUri.value = value?.artUri?.toString() ??
           "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3761843179,3646757056&fm=26&gp=0.jpg";
-      c.model.value = value?.extras!["model"];
+      c.model.value = Song.fromJson(value?.extras?["model"]);
     });
 
     Global.audioHandler.positionStream.listen((event) {

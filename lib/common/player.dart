@@ -5,7 +5,6 @@ import 'package:koe/models/model.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'api.dart';
-import 'global.dart';
 
 class MediaState {
   final MediaItem mediaItem;
@@ -35,7 +34,6 @@ class DefaultAudioHandler extends BaseAudioHandler
           _player.playing ? MediaControl.pause : MediaControl.play,
           MediaControl.skipToNext,
         ],
-        androidCompactActionIndices: [0, 1, 3],
         systemActions: {
           MediaAction.seek,
           MediaAction.seekForward,
@@ -82,10 +80,8 @@ class DefaultAudioHandler extends BaseAudioHandler
       speed: _player.speed,
     ));
 
-    AudioService.androidForceEnableMediaButtons();
-
-    await _player.setUrl(Api.API_GET_FILE
-        .replaceAll("{file_id}", item.extras!["model"].audioFiles[0].id!));
+    await _player.setUrl(Api.API_GET_FILE.replaceAll(
+        "{file_id}", Song.fromJson(item.extras!["model"]).audioFiles![0].id!));
     await play();
   }
 
@@ -98,7 +94,10 @@ class DefaultAudioHandler extends BaseAudioHandler
         artUri: Uri.parse(song.coverFiles?.length != 0
             ? Api.API_GET_FILE.replaceAll("{file_id}", song.coverFiles![0].id!)
             : "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3761843179,3646757056&fm=26&gp=0.jpg"),
-        extras: {"model": song}));
+        extras: {
+          "model": song
+              .toJson() /* Cannot pass the model directly due to the limits of Android */
+        }));
   }
 
   playFromList(List<Song> playlist, {int startIndex = 0}) async {
@@ -115,7 +114,7 @@ class DefaultAudioHandler extends BaseAudioHandler
                 ? Api.API_GET_FILE
                     .replaceAll("{file_id}", song.coverFiles![0].id!)
                 : "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3761843179,3646757056&fm=26&gp=0.jpg"),
-            extras: {"model": song}))
+            extras: {"model": song.toJson()}))
         .toList();
 
     playbackState.add(playbackState.valueWrapper!.value.copyWith(
@@ -137,9 +136,10 @@ class DefaultAudioHandler extends BaseAudioHandler
     ));
     this.playlist.addAll(mapped);
 
+    this.setRepeatMode(AudioServiceRepeatMode.all);
+
     this.addQueueItems(this.playlist);
     this.updateQueue(this.playlist);
-    this.setRepeatMode(AudioServiceRepeatMode.all);
 
     await this.playFromMediaItem(mapped[startIndex]);
   }
@@ -184,21 +184,5 @@ class DefaultAudioHandler extends BaseAudioHandler
         // app-specific code
         break;
     }
-  }
-}
-
-class Player {
-  static Song? currentSong;
-
-  static void play(Song song) async {
-    Global.audioHandler.play();
-  }
-
-  static void pause() async {
-    Global.audioHandler.pause();
-  }
-
-  static void resume() async {
-    Global.audioHandler.play();
   }
 }
