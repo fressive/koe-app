@@ -4,7 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:koe/common/api.dart';
-import 'package:koe/common/download_manager.dart';
+import 'package:koe/common/download_manager.dart'
+    if (dart.library.html) 'package:koe/common/download_manager_web.dart';
 import 'package:koe/models/model.dart';
 
 class BottomSongInfoSheet extends StatelessWidget {

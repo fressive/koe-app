@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:html' show window;
+import 'dart:js' as js;
+import 'dart:js';
+import 'dart:js_util';
 
-import 'package:flowder/flowder.dart';
 import 'package:flutter/foundation.dart';
 
 import 'api.dart';
-import 'global.dart';
 
 enum DownloadTaskState {
   IDLE,
@@ -26,7 +27,6 @@ class DownloadTaskProgress {
 class DownloadTask {
   static final tasksStream = StreamController<DownloadTask>.broadcast();
 
-  //final stateStream = Stream<DownloadTaskState>.empty().asBroadcastStream();
   final stateStreamController = StreamController<DownloadTaskState>.broadcast();
   final progressStreamController =
       StreamController<DownloadTaskProgress>.broadcast();
@@ -41,8 +41,6 @@ class DownloadTask {
   var ext = "";
   var state = DownloadTaskState.IDLE;
   var progress = DownloadTaskProgress(-1, -1);
-
-  DownloaderCore? _ftask;
 
   jsProgressCallback(received, total) {
     progress = DownloadTaskProgress(received, total);
@@ -61,36 +59,22 @@ class DownloadTask {
     var url = Api.API_GET_FILE.replaceAll("{file_id}", fileId);
     await Api.fetchFile(fileId).then((value) async {
       ext = value.extension!;
-      final downloaderUtils = DownloaderUtils(
-        client: Api.httpClient,
-        progressCallback: (received, total) {
-          progressStreamController.add(DownloadTaskProgress(received, total));
-        },
-        file: File('${await Global.appDirectory}/musics/$saveName.$ext'),
-        progress: ProgressImplementation(),
-        onDone: () {
-          state = DownloadTaskState.FINISHED;
-          stateStreamController.add(state);
-        },
-        deleteOnCancel: true,
-      );
-
-      _ftask = await Flowder.download(url, downloaderUtils);
+      setProperty(
+          window, "progCallback$fileId", allowInterop(jsProgressCallback));
+      setProperty(
+          window, "finishedCallback$fileId", allowInterop(doneCallback));
+      js.context.callMethod('start', [fileId, url, "", saveName, ext]);
     });
   }
 
   pause() async {
     state = DownloadTaskState.PAUSED;
     stateStreamController.add(state);
-
-    _ftask!.pause();
   }
 
   cancel() async {
     state = DownloadTaskState.TERMINATED;
     stateStreamController.add(state);
-
-    _ftask!.cancel();
   }
 }
 
